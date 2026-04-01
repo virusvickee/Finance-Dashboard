@@ -27,7 +27,7 @@ export const SummaryCards: React.FC = () => {
       {cards.map((card, idx) => (
         <div 
           key={idx} 
-          className="bg-card border border-border p-6 rounded-2xl flex items-center justify-between hover:border-accent/40 transition-colors shadow-lg shadow-black/20"
+          className="animate-in fade-in bg-card border border-border p-6 rounded-2xl flex items-center justify-between hover:border-accent/40 transition-colors shadow-lg shadow-black/20"
           style={{ animationDelay: card.delay, animationFillMode: 'both' }}
         >
           <div className="flex flex-col gap-1">

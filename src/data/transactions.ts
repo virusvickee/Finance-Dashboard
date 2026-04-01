@@ -19,12 +19,13 @@ const generateTransactions = (): Transaction[] => {
       type: 'income',
     });
 
-    // Freelance (variable)
+    // Freelance (variable deterministic)
+    const seededRandom = ((startYear * month * 13) % 17) / 17;
     transactions.push({
       id: `trx-${idCounter++}`,
       date: `${startYear}-${monthStr}-10`,
       description: 'Freelance Project',
-      amount: Math.floor(Math.random() * (35000 - 18000 + 1)) + 18000,
+      amount: Math.floor(seededRandom * (35000 - 18000 + 1)) + 18000,
       category: 'freelance',
       type: 'income',
     });

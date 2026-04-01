@@ -11,7 +11,7 @@ export const Header: React.FC = () => {
     return curr.type === 'income' ? acc + curr.amount : acc - curr.amount;
   }, 0);
 
-  const viewTitles = {
+  const viewTitles: Record<string, string> = {
     dashboard: 'Dashboard',
     transactions: 'Transactions',
     insights: 'Insights'
@@ -26,12 +26,17 @@ export const Header: React.FC = () => {
   return (
     <header className="h-16 border-b border-border bg-card/50 backdrop-blur-md sticky top-0 z-40 flex items-center justify-between px-6 md:px-10">
       <div>
-        <h1 className="font-display text-xl font-bold capitalize">{viewTitles[activeView]}</h1>
+        <h1 className="font-display text-xl font-bold capitalize">{viewTitles[activeView] || 'FinPulse'}</h1>
         <p className="text-xs text-muted mt-0.5">{format(new Date(), 'EEEE, MMMM do, yyyy')}</p>
       </div>
       
       <div className="flex items-center gap-2 md:gap-4">
-        <button onClick={() => setIsDark(!isDark)} className="p-2 rounded-lg hover:bg-surface transition-colors">
+        <button 
+          onClick={() => setIsDark(!isDark)} 
+          className="p-2 rounded-lg hover:bg-surface transition-colors"
+          aria-label={isDark ? "Disable dark mode" : "Enable dark mode"}
+          aria-pressed={isDark}
+        >
           {isDark ? <Sun className="w-4 h-4 text-amber" /> : <Moon className="w-4 h-4 text-muted" />}
         </button>
         <div className="flex flex-col items-end">

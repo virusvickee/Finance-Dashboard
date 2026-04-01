@@ -41,15 +41,20 @@ export const TransactionList: React.FC = () => {
   };
 
   const exportCSV = () => {
+    const quoteField = (value: any) => {
+      const stringValue = String(value).replace(/\r\n|\n/g, ' ');
+      return `"${stringValue.replace(/"/g, '""')}"`;
+    };
+
     const headers = ['Date', 'Description', 'Category', 'Type', 'Amount (INR)'];
     const rows = filteredItems.map(t => [
-      t.date,
-      `"${t.description.replace(/"/g, '""')}"`,
-      t.category,
-      t.type,
-      t.amount,
+      quoteField(t.date),
+      quoteField(t.description),
+      quoteField(t.category),
+      quoteField(t.type),
+      quoteField(t.amount),
     ]);
-    const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
+    const csv = [headers.map(quoteField), ...rows].map(r => r.join(',')).join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');

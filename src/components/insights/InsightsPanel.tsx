@@ -12,16 +12,21 @@ export const InsightsPanel: React.FC = () => {
     const monthlyNet: Record<string, { income: number, expense: number, monthStr: string, rawMonth: string }> = {};
 
     transactions.forEach(t => {
-      const monthPrefix = t.date.slice(0, 7); // YYYY-MM
-      const readableMonth = format(parseISO(t.date), 'MMMM yyyy');
-      
-      if (!monthlyNet[monthPrefix]) monthlyNet[monthPrefix] = { income: 0, expense: 0, monthStr: readableMonth, rawMonth: monthPrefix };
+      if (!t.date || typeof t.date !== 'string' || t.date.length < 7) return;
+      try {
+        const monthPrefix = t.date.slice(0, 7); // YYYY-MM
+        const readableMonth = format(parseISO(t.date), 'MMMM yyyy');
+        
+        if (!monthlyNet[monthPrefix]) monthlyNet[monthPrefix] = { income: 0, expense: 0, monthStr: readableMonth, rawMonth: monthPrefix };
 
-      if (t.type === 'expense') {
-        categoryTotals[t.category] = (categoryTotals[t.category] || 0) + t.amount;
-        monthlyNet[monthPrefix].expense += t.amount;
-      } else {
-        monthlyNet[monthPrefix].income += t.amount;
+        if (t.type === 'expense') {
+          categoryTotals[t.category] = (categoryTotals[t.category] || 0) + t.amount;
+          monthlyNet[monthPrefix].expense += t.amount;
+        } else {
+          monthlyNet[monthPrefix].income += t.amount;
+        }
+      } catch (e) {
+        // Ignore malformed dates
       }
     });
 
@@ -115,7 +120,7 @@ export const InsightsPanel: React.FC = () => {
             .sort((a, b) => b[1] - a[1])
             .slice(0, 5)
             .map(([cat, amt], i) => {
-              const percentage = ((amt / insights.totalExpenses) * 100).toFixed(1);
+              const percentage = insights.totalExpenses > 0 ? ((amt / insights.totalExpenses) * 100).toFixed(1) : "0.0";
               const colors = ['#EC4899', '#6366F1', '#F59E0B', '#10B981', '#3B82F6'];
               return (
                 <div key={cat}>

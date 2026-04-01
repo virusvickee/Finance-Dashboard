@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Transaction } from '../../types';
 import { Edit2, Trash2 } from 'lucide-react';
-import { format, parseISO } from 'date-fns';
+import { format, parseISO, isValid } from 'date-fns';
 import { CATEGORY_COLORS } from '../dashboard/SpendingPieChart';
 import clsx from 'clsx';
 import { useAppSelector } from '../../hooks/useAppSelector';
@@ -27,7 +27,9 @@ export const TransactionRow: React.FC<TransactionRowProps> = ({ transaction, onE
         </div>
         <div>
           <h4 className="font-medium text-white">{transaction.description}</h4>
-          <p className="text-sm text-muted capitalize">{format(parseISO(transaction.date), 'MMM do, yyyy')} • {transaction.category}</p>
+          <p className="text-sm text-muted capitalize">
+            {isValid(parseISO(transaction.date)) ? format(parseISO(transaction.date), 'MMM do, yyyy') : 'Invalid date'} • {transaction.category}
+          </p>
         </div>
       </div>
       
@@ -38,10 +40,18 @@ export const TransactionRow: React.FC<TransactionRowProps> = ({ transaction, onE
         
         {role === 'admin' ? (
           <div className="flex gap-2 sm:opacity-0 sm:invisible group-hover:opacity-100 group-hover:visible transition-all">
-            <button onClick={() => onEdit(transaction)} className="p-2 text-muted hover:text-white bg-surface hover:bg-muted/20 rounded-lg transition-colors">
+            <button onClick={() => onEdit(transaction)} aria-label={`Edit ${transaction.description}`} className="p-2 text-muted hover:text-white bg-surface hover:bg-muted/20 rounded-lg transition-colors">
               <Edit2 className="w-4 h-4" />
             </button>
-            <button onClick={() => dispatch(deleteTransaction(transaction.id))} className="p-2 text-muted hover:text-pink bg-surface hover:bg-pink/10 rounded-lg transition-colors">
+            <button 
+              onClick={() => {
+                if (window.confirm('Are you sure you want to delete this transaction?')) {
+                  dispatch(deleteTransaction(transaction.id));
+                }
+              }} 
+              aria-label={`Delete ${transaction.description}`}
+              className="p-2 text-muted hover:text-pink bg-surface hover:bg-pink/10 rounded-lg transition-colors"
+            >
               <Trash2 className="w-4 h-4" />
             </button>
           </div>

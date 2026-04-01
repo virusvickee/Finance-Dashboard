@@ -12,7 +12,11 @@
   }
 }
 
-/* Custom scrollbar for webkit */
+/* 
+ * Custom scrollbar for webkit (Chrome/Safari/Edge)
+ * Next steps: Add `scrollbar-width` and `scrollbar-color` properties for Firefox support,
+ * or use a dedicated JS/CSS custom scrollbar library for true cross-browser consistency.
+ */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -21,5 +25,8 @@
   @apply bg-surface; 
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-border rounded-full hover:bg-muted transition-colors; 
+  @apply bg-border rounded-full transition-colors; 
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-muted;
 }

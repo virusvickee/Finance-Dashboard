@@ -7,7 +7,7 @@ export interface TransactionsState {
   items: Transaction[];
 }
 
-const initialState: TransactionsState = {
+export const initialState: TransactionsState = {
   items: transactionsData,
 };
 

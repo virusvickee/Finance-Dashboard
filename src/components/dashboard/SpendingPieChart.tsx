@@ -19,7 +19,8 @@ export const SpendingPieChart: React.FC = () => {
   const transactions = useAppSelector(state => state.transactions.items);
 
   const data = useMemo(() => {
-    const expenses = transactions.filter(t => t.type === 'expense');
+    const tx = transactions || [];
+    const expenses = tx.filter(t => t.type === 'expense');
     const grouped = expenses.reduce((acc, curr) => {
       acc[curr.category] = (acc[curr.category] || 0) + curr.amount;
       return acc;
@@ -66,7 +67,7 @@ export const SpendingPieChart: React.FC = () => {
               stroke="transparent"
             >
               {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} className="hover:opacity-80 transition-opacity cursor-pointer focus:outline-none" />
+                <Cell key={`cell-${index}`} fill={entry.color} className="hover:opacity-80 transition-opacity" />
               ))}
             </Pie>
             <Tooltip content={<CustomTooltip />} />

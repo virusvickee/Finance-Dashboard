@@ -1,7 +1,7 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import transactionsReducer from './slices/transactionsSlice';
+import transactionsReducer, { initialState as transactionsInitialState } from './slices/transactionsSlice';
 import filtersReducer from './slices/filtersSlice';
-import uiReducer from './slices/uiSlice';
+import uiReducer, { initialState as uiInitialState } from './slices/uiSlice';
 
 const rootReducer = combineReducers({
   transactions: transactionsReducer,
@@ -19,8 +19,8 @@ const loadState = (): Partial<RootState> | undefined => {
     if (!serializedTx && !savedRole) return undefined;
 
     return {
-      ...(serializedTx ? { transactions: { items: JSON.parse(serializedTx) } } : {}),
-      ...(savedRole ? { ui: { role: savedRole, activeView: 'dashboard' } } : {})
+      ...(serializedTx ? { transactions: { ...transactionsInitialState, items: JSON.parse(serializedTx) } } : {}),
+      ...(savedRole ? { ui: { ...uiInitialState, role: savedRole } } : {})
     };
   } catch {
     return undefined;

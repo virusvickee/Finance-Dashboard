@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from 'recharts';
 import { useAppSelector } from '../../hooks/useAppSelector';
-import { format, parseISO } from 'date-fns';
+import { format, parseISO, parse } from 'date-fns';
 
 export const BalanceTrendChart: React.FC = () => {
   const transactions = useAppSelector(state => state.transactions.items);
@@ -22,8 +22,8 @@ export const BalanceTrendChart: React.FC = () => {
     // Reduce iteratively to compute running net balance
     let prevNet = 0;
     return Object.values(monthlyData).sort((a, b) => {
-        const da = new Date('01 ' + a.month);
-        const db = new Date('01 ' + b.month);
+        const da = parse(a.month, 'MMM yy', new Date());
+        const db = parse(b.month, 'MMM yy', new Date());
         return da.getTime() - db.getTime();
     }).map((m) => {
         const net = m.income - m.expense;

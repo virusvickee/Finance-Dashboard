@@ -7,7 +7,7 @@ export interface UiState {
   activeView: ActiveView;
 }
 
-const initialState: UiState = {
+export const initialState: UiState = {
   role: 'viewer',
   activeView: 'dashboard',
 };

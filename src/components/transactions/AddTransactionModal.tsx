@@ -30,6 +30,14 @@ export const AddTransactionModal: React.FC<ModalProps> = ({ isOpen, onClose, ini
         category: initialData.category,
         type: initialData.type,
       });
+    } else {
+      setFormData({
+        description: '',
+        amount: '',
+        date: new Date().toISOString().split('T')[0],
+        category: 'other' as TransactionCategory,
+        type: 'expense' as TransactionType,
+      });
     }
   }, [initialData]);
 
@@ -45,14 +53,20 @@ export const AddTransactionModal: React.FC<ModalProps> = ({ isOpen, onClose, ini
     e.preventDefault();
     if (!formData.description || !formData.amount || !formData.date) return;
     
-    const payload: Transaction = {
+    const parsedAmount = parseFloat(formData.amount.trim());
+    if (isNaN(parsedAmount) || !Number.isFinite(parsedAmount) || parsedAmount <= 0) {
+      alert("Please enter a valid amount greater than 0");
+      return;
+    }
+
+    const payload = {
       id: initialData ? initialData.id : `trx-${Date.now()}`,
       description: formData.description,
-      amount: parseFloat(formData.amount),
+      amount: parsedAmount,
       date: formData.date,
       category: formData.category,
       type: formData.type,
-    };
+    } as unknown as Transaction;
 
     if (initialData) {
       dispatch(editTransaction(payload));
