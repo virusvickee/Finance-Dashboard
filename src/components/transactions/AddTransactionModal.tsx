@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { addTransaction, editTransaction } from '../../store/slices/transactionsSlice';
-import type { Transaction, TransactionCategory, TransactionType } from '../../types';
+import type { Transaction, TransactionCategory, TransactionType, IncomeCategory, ExpenseCategory } from '../../types';
 
 interface ModalProps {
   isOpen: boolean;
@@ -59,14 +59,16 @@ export const AddTransactionModal: React.FC<ModalProps> = ({ isOpen, onClose, ini
       return;
     }
 
-    const payload = {
+    const basePayload = {
       id: initialData ? initialData.id : `trx-${Date.now()}`,
       description: formData.description,
       amount: parsedAmount,
       date: formData.date,
-      category: formData.category,
-      type: formData.type,
-    } as unknown as Transaction;
+    };
+
+    const payload: Transaction = formData.type === 'income' 
+      ? { ...basePayload, type: 'income', category: formData.category as IncomeCategory }
+      : { ...basePayload, type: 'expense', category: formData.category as ExpenseCategory };
 
     if (initialData) {
       dispatch(editTransaction(payload));

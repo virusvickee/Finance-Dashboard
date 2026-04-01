@@ -22,8 +22,8 @@ export const BalanceTrendChart: React.FC = () => {
     // Reduce iteratively to compute running net balance
     let prevNet = 0;
     return Object.values(monthlyData).sort((a, b) => {
-        const da = parse(a.month, 'MMM yy', new Date());
-        const db = parse(b.month, 'MMM yy', new Date());
+        const da = parse(a.month, 'MMM yy', new Date(2000, 0, 1));
+        const db = parse(b.month, 'MMM yy', new Date(2000, 0, 1));
         return da.getTime() - db.getTime();
     }).map((m) => {
         const net = m.income - m.expense;

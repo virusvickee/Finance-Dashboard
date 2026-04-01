@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { setActiveView, setRole } from '../../store/slices/uiSlice';
@@ -9,13 +9,37 @@ export const Sidebar: React.FC = () => {
   const dispatch = useAppDispatch();
   const { activeView, role } = useAppSelector((state) => state.ui);
   const [isRoleMenuOpen, setIsRoleMenuOpen] = useState(false);
+  const menuContainerRef = useRef<HTMLDivElement>(null);
+  const toggleButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      if (menuContainerRef.current && !menuContainerRef.current.contains(event.target as Node)) {
+        setIsRoleMenuOpen(false);
+      }
+    };
+    if (isRoleMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('touchstart', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [isRoleMenuOpen]);
 
   const handleRoleToggleKey = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
       e.preventDefault();
-      setIsRoleMenuOpen(prev => !prev);
+      setIsRoleMenuOpen(true);
+      // Move focus after state updates
+      setTimeout(() => {
+        const firstMenuItem = menuContainerRef.current?.querySelector('button[role="menuitem"]') as HTMLButtonElement | null;
+        if (firstMenuItem) firstMenuItem.focus();
+      }, 0);
     } else if (e.key === 'Escape') {
       setIsRoleMenuOpen(false);
+      toggleButtonRef.current?.focus();
     }
   };
 
@@ -52,11 +76,13 @@ export const Sidebar: React.FC = () => {
       </nav>
 
       <div className="hidden md:flex p-4 border-t border-border">
-        <div className="w-full relative">
+        <div className="w-full relative" ref={menuContainerRef}>
           <button 
+            ref={toggleButtonRef}
             className="w-full flex items-center justify-between px-4 py-3 bg-surface rounded-xl border border-border hover:border-accent/50 transition-colors"
             onClick={() => setIsRoleMenuOpen(!isRoleMenuOpen)}
             onKeyDown={handleRoleToggleKey}
+            aria-haspopup="menu"
             aria-expanded={isRoleMenuOpen}
             aria-controls="role-menu"
           >
@@ -74,15 +100,17 @@ export const Sidebar: React.FC = () => {
           </button>
           
           {isRoleMenuOpen && (
-            <div id="role-menu" className="absolute bottom-full left-0 w-full mb-2 bg-card border border-border rounded-xl shadow-xl transition-all flex flex-col overflow-hidden z-50">
+            <div id="role-menu" role="menu" className="absolute bottom-full left-0 w-full mb-2 bg-card border border-border rounded-xl shadow-xl transition-all flex flex-col overflow-hidden z-50">
               <button 
-                onClick={() => { dispatch(setRole('admin')); setIsRoleMenuOpen(false); }}
+                role="menuitem"
+                onClick={() => { dispatch(setRole('admin')); setIsRoleMenuOpen(false); toggleButtonRef.current?.focus(); }}
                 className="px-4 py-3 text-sm text-left hover:bg-surface flex items-center gap-2"
               >
                 <Shield className="w-4 h-4 text-emerald" /> Admin Access
               </button>
               <button 
-                onClick={() => { dispatch(setRole('viewer')); setIsRoleMenuOpen(false); }}
+                role="menuitem"
+                onClick={() => { dispatch(setRole('viewer')); setIsRoleMenuOpen(false); toggleButtonRef.current?.focus(); }}
                 className="px-4 py-3 text-sm text-left hover:bg-surface border-t border-border flex items-center gap-2"
               >
                 <User className="w-4 h-4 text-amber" /> Viewer Access
