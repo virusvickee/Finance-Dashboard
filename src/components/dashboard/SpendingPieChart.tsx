@@ -53,8 +53,8 @@ export const SpendingPieChart: React.FC = () => {
   return (
     <div className="bg-card border border-border rounded-2xl p-6 h-[400px] w-full flex flex-col shadow-lg shadow-black/20">
       <h3 className="font-display font-semibold mb-2">Spending Breakdown</h3>
-      <div className="flex-1 w-full relative">
-        <ResponsiveContainer width="100%" height="100%">
+      <div className="flex-1 w-full relative min-h-0 min-w-0">
+        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
           <PieChart>
             <Pie
               data={data}

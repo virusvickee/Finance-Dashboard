@@ -52,8 +52,8 @@ export const BalanceTrendChart: React.FC = () => {
   return (
     <div className="bg-card border border-border rounded-2xl p-6 h-[400px] w-full flex flex-col shadow-lg shadow-black/20">
       <h3 className="font-display font-semibold mb-6">Balance Trend</h3>
-      <div className="flex-1 w-full relative">
-        <ResponsiveContainer width="100%" height="100%">
+      <div className="flex-1 w-full relative min-h-0 min-w-0">
+        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
           <LineChart data={data} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="rgb(var(--border))" vertical={false} />
             <XAxis dataKey="month" stroke="#6B7280" tick={{ fill: '#6B7280', fontSize: 12 }} axisLine={false} tickLine={false} dy={10} />
