@@ -55,7 +55,7 @@ export const BalanceTrendChart: React.FC = () => {
       <div className="flex-1 w-full relative">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#2A2A3A" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgb(var(--border))" vertical={false} />
             <XAxis dataKey="month" stroke="#6B7280" tick={{ fill: '#6B7280', fontSize: 12 }} axisLine={false} tickLine={false} dy={10} />
             <YAxis stroke="#6B7280" tick={{ fill: '#6B7280', fontSize: 12, fontFamily: 'DM Mono' }} tickFormatter={(val) => `₹${val/1000}k`} axisLine={false} tickLine={false} dx={-10} />
             <Tooltip content={<CustomTooltip />} />
