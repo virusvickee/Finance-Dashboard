@@ -2,7 +2,7 @@
 
 A clean, interactive finance dashboard built as a Frontend Developer Intern assignment for Zorvyn.
 
-Live Demo: [your-vercel-url]
+Live Demo: https://finance-dashboard-pied-chi.vercel.app/
 GitHub: https://github.com/virusvickee/finance-dashboard
 
 ---
